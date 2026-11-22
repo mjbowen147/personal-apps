@@ -1,0 +1,1134 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Chain Wax" />
+  <meta name="theme-color" content="#090d16" />
+  <title>Chain Wax Workshop</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      background: transparent;
+      cursor: pointer;
+    }
+    input[type="range"]::-webkit-slider-runnable-track {
+      height: 4px;
+      border-radius: 999px;
+      background: #1e293b;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      margin-top: -6px;
+      background-color: #38bdf8;
+      height: 16px;
+      width: 16px;
+      border-radius: 999px;
+      border: 2px solid #090d16;
+    }
+    /* Hide number input arrows for cleaner look */
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+  </style>
+</head>
+<body class="bg-[#090d16] text-slate-100 min-h-screen antialiased selection:bg-sky-500/30">
+
+  <div class="max-w-lg w-full mx-auto px-4 py-6 sm:py-10 space-y-5">
+
+    <!-- Minimal Header -->
+    <header class="flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-sky-400/20 via-indigo-500/20 to-emerald-400/20 border border-sky-400/30 flex items-center justify-center text-sky-400 shadow-inner">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" />
+          </svg>
+        </div>
+        <div>
+          <h1 class="text-lg font-bold tracking-tight text-white">Chain Wax Workshop</h1>
+          <p class="text-xs text-slate-400">Cookworks 1.5L Pot • 20:1 Oz Ratio</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <button
+          id="lockAppBtn"
+          type="button"
+          onclick="reLockApp()"
+          class="p-2 rounded-xl text-slate-400 hover:text-amber-400 hover:bg-slate-800/70 border border-transparent hover:border-slate-700/70 transition cursor-pointer"
+          title="Lock Workshop"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+          </svg>
+        </button>
+
+        <button
+          id="enableNotifBtn"
+          type="button"
+          class="p-2 rounded-xl text-slate-400 hover:text-slate-200 hover:bg-slate-800/70 border border-transparent hover:border-slate-700/70 transition cursor-pointer"
+          title="Enable browser pop-up alerts"
+        >
+          <svg id="notifIcon" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
+          </svg>
+        </button>
+
+        <button
+          id="testPingBtn"
+          type="button"
+          class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900/90 hover:bg-slate-800 text-xs font-medium text-slate-200 border border-slate-700/80 transition cursor-pointer"
+          title="Test chime sound"
+        >
+          <svg class="w-3.5 h-3.5 text-sky-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+          </svg>
+          <span>Ping</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- =================================================================== -->
+    <!-- ALWAYS-VISIBLE WORKFLOW TIMELINE                                    -->
+    <!-- =================================================================== -->
+    <section aria-label="Workflow timeline" class="bg-gradient-to-b from-slate-900/95 to-slate-900/75 border border-slate-800/90 rounded-2xl p-3.5 sm:p-4 space-y-2.5 shadow-lg shadow-black/20">
+      <div class="flex items-center justify-between text-[11px]">
+        <span id="timelineModeLabel" class="font-semibold text-slate-300">Chain Waxing Timeline</span>
+        <span id="timelineTotalDuration" class="font-mono text-sky-400/90">Total: ~58m</span>
+      </div>
+      <div id="visualTimelineContainer" class="relative flex items-start justify-between gap-1 pt-1">
+        <!-- Populated dynamically with connected stage nodes and durations -->
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- STEP 1 SETUP OPTIONS (New Puck Creation & Brand-New Factory Chain)  -->
+    <!-- =================================================================== -->
+    <section id="stepOneOptionsSection" class="space-y-3">
+      <div class="bg-slate-900/80 border border-slate-800/90 rounded-2xl divide-y divide-slate-800/80 overflow-hidden shadow-lg shadow-black/20">
+        <!-- Option 1: New Puck Creation -->
+        <label class="flex items-center justify-between px-4 py-3 cursor-pointer select-none hover:bg-slate-800/40 transition">
+          <div>
+            <span class="text-xs font-semibold text-slate-200">New Puck Creation</span>
+            <p id="puckModeSubtext" class="text-[11px] text-slate-400">Off: melting an existing wax puck</p>
+          </div>
+          <input id="newPuckCheckbox" type="checkbox" class="w-4 h-4 rounded accent-sky-400 cursor-pointer" />
+        </label>
+
+        <!-- Option 2: Brand-new factory chain -->
+        <label class="flex items-center justify-between px-4 py-3 cursor-pointer select-none hover:bg-slate-800/40 transition">
+          <div>
+            <span class="text-xs font-semibold text-slate-200">Brand-new factory chain</span>
+            <p id="chainModeSubtext" class="text-[11px] text-slate-400">Off: assumes previously waxed chain rinsed in hot water</p>
+          </div>
+          <input id="newChainCheckbox" type="checkbox" class="w-4 h-4 rounded accent-sky-400 cursor-pointer" />
+        </label>
+      </div>
+
+      <!-- Compact Puck Calculator (Visible when New Puck Creation is ticked) -->
+      <div id="puckCalculatorSection" class="hidden bg-slate-900/80 border border-slate-800/90 rounded-2xl p-4 space-y-4 shadow-lg shadow-black/20">
+        <div class="flex items-center justify-between gap-3">
+          <label for="waxWeightInput" class="text-xs font-medium text-slate-300">Paraffin Wax</label>
+          <div class="flex items-center gap-1.5">
+            <button type="button" data-preset="232" class="preset-btn px-2.5 py-1 rounded-lg bg-slate-800/90 hover:bg-slate-700 text-[11px] font-mono text-sky-400 border border-slate-700/70 transition cursor-pointer">232g</button>
+            <button type="button" data-preset="250" class="preset-btn px-2.5 py-1 rounded-lg bg-slate-800/90 hover:bg-slate-700 text-[11px] font-mono text-slate-400 border border-slate-800 transition cursor-pointer">250g</button>
+            <button type="button" data-preset="500" class="preset-btn px-2.5 py-1 rounded-lg bg-slate-800/90 hover:bg-slate-700 text-[11px] font-mono text-slate-400 border border-slate-800 transition cursor-pointer">500g</button>
+            <div class="relative w-20 ml-1">
+              <input
+                id="waxWeightInput"
+                type="number"
+                min="10"
+                max="5000"
+                step="1"
+                value="232"
+                class="w-full bg-[#090d16] border border-slate-700 focus:border-sky-400 focus:outline-none rounded-lg px-2.5 py-1 text-right text-sm font-mono font-bold text-white pr-6"
+              />
+              <span class="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-slate-500">g</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="space-y-1.5">
+          <div class="flex items-center justify-between text-xs">
+            <label for="stearicSlider" class="text-slate-400">Stearic Acid (anti-flake)</label>
+            <span id="stearicPctLabel" class="font-mono font-semibold text-emerald-400">1.5%</span>
+          </div>
+          <input id="stearicSlider" type="range" min="1.0" max="2.0" step="0.1" value="1.5" class="w-full" />
+        </div>
+
+        <!-- Clean 3-Column Summary Strip -->
+        <div class="grid grid-cols-3 divide-x divide-slate-800 bg-[#090d16]/90 rounded-xl border border-slate-800/90 py-2.5 text-center">
+          <div>
+            <div class="text-[11px] text-slate-400">PTFE (5%)</div>
+            <div id="calcPtfeOut" class="text-sm font-mono font-bold text-sky-400 mt-0.5">11.6 g</div>
+          </div>
+          <div>
+            <div class="text-[11px] text-slate-400">Stearic</div>
+            <div id="calcStearicOut" class="text-sm font-mono font-bold text-emerald-400 mt-0.5">3.5 g</div>
+          </div>
+          <div>
+            <div class="text-[11px] text-slate-400">Total Puck</div>
+            <div id="calcTotalOut" class="text-sm font-mono font-bold text-white mt-0.5">247.1 g</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- STAGE COMPLETION ALERT BANNER                                       -->
+    <!-- =================================================================== -->
+    <div id="completeBanner" class="hidden bg-emerald-500/10 border border-emerald-400/30 rounded-2xl px-4 py-3">
+      <p id="bannerTitle" class="text-xs font-bold text-emerald-300">Stage Complete</p>
+      <p id="bannerDesc" class="text-[11px] text-slate-300 mt-0.5">Ready for the next step.</p>
+    </div>
+
+    <!-- =================================================================== -->
+    <!-- MAIN UNIFIED STAGE CARD                                             -->
+    <!-- =================================================================== -->
+    <main class="bg-gradient-to-b from-slate-900/90 to-slate-900/60 border border-slate-800/90 rounded-2xl overflow-hidden shadow-xl shadow-black/25">
+
+      <div class="p-5 sm:p-6 space-y-6">
+
+        <!-- Title & Subtle Heat/Temp Metadata -->
+        <div class="space-y-1.5">
+          <div class="flex items-center justify-between text-xs text-slate-400">
+            <span id="stageCounterText" class="font-semibold text-sky-400">Step 1 of 5</span>
+            <div class="flex items-center gap-2 font-mono text-[11px]">
+              <span id="dialSettingBadge" class="px-2.5 py-0.5 rounded-md bg-sky-500/15 border border-sky-400/30 text-sky-300 font-semibold">LOW</span>
+              <span id="tempTargetBadge" class="text-slate-300">75–85°C</span>
+            </div>
+          </div>
+          <h2 id="stageHeadingText" class="text-lg sm:text-xl font-bold text-white">Prep Chain & Melt Puck</h2>
+        </div>
+
+        <!-- Clean Countdown Display -->
+        <div class="py-2 text-center space-y-3">
+          <div id="timedControlsRow" class="flex items-center justify-center gap-6">
+            <button
+              id="subMinBtn"
+              type="button"
+              class="w-9 h-9 rounded-full bg-slate-800/90 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-mono border border-slate-700/60 transition cursor-pointer"
+              title="Subtract 1 minute"
+            >
+              -1m
+            </button>
+
+            <div id="countdownClock" class="font-mono text-5xl sm:text-6xl font-bold tracking-tight text-white tabular-nums">
+              25:00
+            </div>
+
+            <button
+              id="addMinBtn"
+              type="button"
+              class="w-9 h-9 rounded-full bg-slate-800/90 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-mono border border-slate-700/60 transition cursor-pointer"
+              title="Add 1 minute"
+            >
+              +1m
+            </button>
+          </div>
+
+          <div id="untimedBanner" class="hidden py-3">
+            <span class="text-xs font-medium text-emerald-400">Final Checklist Step • No Timer Needed</span>
+          </div>
+
+          <!-- Slim Progress Line -->
+          <div class="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
+            <div id="timerProgressBar" class="h-full bg-gradient-to-r from-sky-400 to-indigo-400 transition-all duration-300" style="width: 100%;"></div>
+          </div>
+        </div>
+
+        <!-- Clean Checklist -->
+        <div class="space-y-3 pt-1">
+          <div class="flex items-center justify-between text-[11px] font-medium text-slate-400">
+            <span>CHECKLIST</span>
+            <span id="checklistProgress" class="font-mono">0/3</span>
+          </div>
+          <ul id="stageChecklist" class="space-y-2.5">
+            <!-- Populated dynamically -->
+          </ul>
+        </div>
+
+        <!-- Primary Action & Subtle Navigation -->
+        <div class="pt-2 space-y-3">
+          <button
+            id="primaryActionBtn"
+            type="button"
+            class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-sky-400 to-blue-500 hover:from-sky-300 hover:to-blue-400 active:scale-[0.99] text-slate-950 font-bold text-sm shadow-lg shadow-sky-500/20 transition cursor-pointer"
+          >
+            Start Timer
+          </button>
+
+          <div class="flex items-center justify-between text-xs text-slate-400 pt-1">
+            <button
+              id="prevStageBtn"
+              type="button"
+              class="hover:text-white disabled:opacity-30 disabled:pointer-events-none transition cursor-pointer"
+            >
+              ← Previous
+            </button>
+
+            <button
+              id="resetCurrentBtn"
+              type="button"
+              class="hover:text-slate-200 transition cursor-pointer"
+            >
+              Reset
+            </button>
+
+            <button
+              id="nextStageBtn"
+              type="button"
+              class="hover:text-white disabled:opacity-30 disabled:pointer-events-none transition cursor-pointer"
+            >
+              Next →
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </main>
+
+  </div>
+
+  <!-- Workshop PIN Access Gate Modal (Exact Skate & Learn spec) -->
+  <div id="modal-pin" class="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-[#060913]/95 backdrop-blur-md">
+    <div class="bg-slate-900 border-2 border-amber-400/80 rounded-3xl max-w-sm w-full p-6 text-center space-y-4 shadow-2xl">
+      <div class="w-14 h-14 mx-auto rounded-2xl bg-amber-500/20 border-2 border-amber-400 flex items-center justify-center text-3xl shadow-lg">
+        &#128274;
+      </div>
+      <div>
+        <h2 class="text-2xl font-black tracking-wide text-white">Workshop Access</h2>
+        <p class="text-xs text-slate-300 font-semibold mt-1">Enter PIN code to unlock the Chain Wax Workshop.</p>
+      </div>
+
+      <!-- PIN input display -->
+      <div class="flex justify-center my-1">
+        <input type="password" id="pin-input" maxlength="9" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;"
+          class="w-64 text-center tracking-[8px] text-2xl font-black font-mono py-2.5 rounded-2xl bg-slate-950 border-2 border-amber-400/80 text-amber-300 focus:outline-none focus:border-amber-300 shadow-inner"
+          autocomplete="off" />
+      </div>
+      <div id="pin-error" class="text-xs font-bold text-rose-400 hidden animate-pulse">Incorrect PIN. Please try again.</div>
+
+      <!-- Numeric & Symbol Keypad for Touchscreens / Mobile -->
+      <div class="grid grid-cols-3 gap-2 max-w-[240px] mx-auto pt-1">
+        <button type="button" onclick="pinDigit('1')" class="py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:bg-slate-600 border border-slate-700 text-lg font-black text-white">&#49;</button>
+        <button type="button" onclick="pinDigit('2')" class="py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:bg-slate-600 border border-slate-700 text-lg font-black text-white">&#50;</button>
+        <button type="button" onclick="pinDigit('3')" class="py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:bg-slate-600 border border-slate-700 text-lg font-black text-white">&#51;</button>
+        <button type="button" onclick="pinDigit('4')" class="py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:bg-slate-600 border border-slate-700 text-lg font-black text-white">&#52;</button>
+        <button type="button" onclick="pinDigit('5')" class="py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:bg-slate-600 border border-slate-700 text-lg font-black text-white">&#53;</button>
+        <button type="button" onclick="pinDigit('6')" class="py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:bg-slate-600 border border-slate-700 text-lg font-black text-white">&#54;</button>
+        <button type="button" onclick="pinDigit('7')" class="py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:bg-slate-600 border border-slate-700 text-lg font-black text-white">&#55;</button>
+        <button type="button" onclick="pinDigit('8')" class="py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:bg-slate-600 border border-slate-700 text-lg font-black text-white">&#56;</button>
+        <button type="button" onclick="pinDigit('9')" class="py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:bg-slate-600 border border-slate-700 text-lg font-black text-white">&#57;</button>
+        <button type="button" onclick="pinDigit('!')" class="py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:bg-slate-600 border border-slate-700 text-lg font-black text-amber-300">!</button>
+        <button type="button" onclick="pinDigit('0')" class="py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:bg-slate-600 border border-slate-700 text-lg font-black text-white">&#48;</button>
+        <button type="button" onclick="pinClear()" class="py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-xs font-black text-slate-400">CLEAR</button>
+        <button type="button" onclick="checkPin()" class="col-span-3 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 active:bg-amber-600 text-slate-950 font-black text-xs uppercase tracking-wider">ENTER / UNLOCK</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // =========================================================================
+    // UNIFIED 5-STAGE CHAIN WAXING WORKFLOW
+    // =========================================================================
+    const STAGES = [
+      {
+        short: 'Prep & Melt',
+        title: 'Prep Chain & Melt Puck',
+        dial: 'LOW',
+        temp: '75–85°C',
+        seconds: 25 * 60,
+        doneTitle: 'Wax Bath Melted & Ready!',
+        doneDesc: 'Stir the pot to lift settled PTFE and submerge your chain.'
+      },
+      {
+        short: 'Hot Soak',
+        title: 'Hot Soak & Agitate Chain',
+        dial: 'LOW',
+        temp: '75–85°C',
+        seconds: 10 * 60,
+        doneTitle: 'Hot Soak Complete!',
+        doneDesc: 'Switch dial to WARM or OFF so the wax cools to pull temperature.'
+      },
+      {
+        short: 'Cool Wax',
+        title: 'Cool to Pull Temperature',
+        dial: 'WARM / OFF',
+        temp: '65–75°C',
+        seconds: 8 * 60,
+        doneTitle: 'Pull Temperature Reached!',
+        doneDesc: 'Lift the chain smoothly out of the pot and hang to drip dry.'
+      },
+      {
+        short: 'Drip Dry',
+        title: 'Pull & Drip Dry Chain',
+        dial: 'OFF',
+        temp: 'Room Temp',
+        seconds: 15 * 60,
+        doneTitle: 'Chain Cooled & Solid!',
+        doneDesc: 'Slide the chain off your wire hanger and break in the stiff links.'
+      },
+      {
+        short: 'Reinstall',
+        title: 'Break Links & Reinstall',
+        dial: 'OFF',
+        temp: 'Solid / Ready',
+        seconds: 0,
+        doneTitle: 'Ready to Ride!',
+        doneDesc: 'Your freshly waxed chain is installed and ready.'
+      }
+    ];
+
+    // =========================================================================
+    // STATE
+    // =========================================================================
+    let currentStageIdx = 0;
+    let stageDurations = [];
+    let completedStages = {};
+    let checkedByStage = {};
+
+    let isNewPuckCreation = false;
+    let isNewFactoryChain = false;
+    let waxGrams = 232;
+    let stearicPct = 1.5;
+
+    let remainingSecs = 25 * 60;
+    let isRunning = false;
+    let isComplete = false;
+    let intervalId = null;
+    let audioCtx = null;
+
+    // =========================================================================
+    // DOM REFERENCES
+    // =========================================================================
+    const timelineModeLabel = document.getElementById('timelineModeLabel');
+    const timelineTotalDuration = document.getElementById('timelineTotalDuration');
+    const visualTimelineContainer = document.getElementById('visualTimelineContainer');
+
+    const stepOneOptionsSection = document.getElementById('stepOneOptionsSection');
+    const newPuckCheckbox = document.getElementById('newPuckCheckbox');
+    const puckModeSubtext = document.getElementById('puckModeSubtext');
+    const puckCalculatorSection = document.getElementById('puckCalculatorSection');
+
+    const newChainCheckbox = document.getElementById('newChainCheckbox');
+    const chainModeSubtext = document.getElementById('chainModeSubtext');
+
+    const waxWeightInput = document.getElementById('waxWeightInput');
+    const stearicSlider = document.getElementById('stearicSlider');
+    const stearicPctLabel = document.getElementById('stearicPctLabel');
+    const calcPtfeOut = document.getElementById('calcPtfeOut');
+    const calcStearicOut = document.getElementById('calcStearicOut');
+    const calcTotalOut = document.getElementById('calcTotalOut');
+
+    const completeBanner = document.getElementById('completeBanner');
+    const bannerTitle = document.getElementById('bannerTitle');
+    const bannerDesc = document.getElementById('bannerDesc');
+
+    const dialSettingBadge = document.getElementById('dialSettingBadge');
+    const tempTargetBadge = document.getElementById('tempTargetBadge');
+    const stageCounterText = document.getElementById('stageCounterText');
+    const stageHeadingText = document.getElementById('stageHeadingText');
+
+    const timedControlsRow = document.getElementById('timedControlsRow');
+    const untimedBanner = document.getElementById('untimedBanner');
+    const countdownClock = document.getElementById('countdownClock');
+    const timerProgressBar = document.getElementById('timerProgressBar');
+
+    const stageChecklist = document.getElementById('stageChecklist');
+    const checklistProgress = document.getElementById('checklistProgress');
+
+    const prevStageBtn = document.getElementById('prevStageBtn');
+    const primaryActionBtn = document.getElementById('primaryActionBtn');
+    const nextStageBtn = document.getElementById('nextStageBtn');
+    const subMinBtn = document.getElementById('subMinBtn');
+    const addMinBtn = document.getElementById('addMinBtn');
+    const resetCurrentBtn = document.getElementById('resetCurrentBtn');
+    const testPingBtn = document.getElementById('testPingBtn');
+    const enableNotifBtn = document.getElementById('enableNotifBtn');
+    const notifIcon = document.getElementById('notifIcon');
+
+    // =========================================================================
+    // AUDIO & NOTIFICATIONS
+    // =========================================================================
+    function playPingChime() {
+      try {
+        if (!audioCtx) {
+          const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+          audioCtx = new AudioContextClass();
+        }
+        if (audioCtx.state === 'suspended') {
+          audioCtx.resume();
+        }
+
+        const now = audioCtx.currentTime;
+        const notes = [
+          { freq: 880, start: 0, duration: 0.24, gain: 0.22 },
+          { freq: 1318.5, start: 0.2, duration: 0.45, gain: 0.24 },
+          { freq: 1318.5, start: 0.75, duration: 0.5, gain: 0.18 }
+        ];
+
+        notes.forEach((n) => {
+          const osc = audioCtx.createOscillator();
+          const gainNode = audioCtx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(n.freq, now + n.start);
+
+          gainNode.gain.setValueAtTime(0.0001, now + n.start);
+          gainNode.gain.exponentialRampToValueAtTime(n.gain, now + n.start + 0.02);
+          gainNode.gain.exponentialRampToValueAtTime(0.0001, now + n.start + n.duration);
+
+          osc.connect(gainNode);
+          gainNode.connect(audioCtx.destination);
+          osc.start(now + n.start);
+          osc.stop(now + n.start + n.duration + 0.05);
+        });
+      } catch (err) {
+        console.warn('Audio playback unavailable:', err);
+      }
+    }
+
+    function sendSystemNotification(title, body) {
+      if ('Notification' in window && Notification.permission === 'granted') {
+        try {
+          new Notification(title, { body });
+        } catch (err) {
+          console.warn('Notification error:', err);
+        }
+      }
+    }
+
+    // =========================================================================
+    // CALCULATOR & SETUP OPTIONS LOGIC
+    // =========================================================================
+    function updateCalculatorReadouts() {
+      const parsed = parseFloat(waxWeightInput.value);
+      waxGrams = Number.isFinite(parsed) && parsed > 0 ? parsed : 0;
+
+      const ptfeExact = waxGrams * 0.05;
+      const stearicExact = waxGrams * (stearicPct / 100);
+      const totalMass = waxGrams + ptfeExact + stearicExact;
+
+      stearicPctLabel.textContent = `${stearicPct.toFixed(1)}%`;
+      calcPtfeOut.textContent = `${ptfeExact.toFixed(1)} g`;
+      calcStearicOut.textContent = `${stearicExact.toFixed(1)} g`;
+      calcTotalOut.textContent = `${totalMass.toFixed(1)} g`;
+
+      if (currentStageIdx === 0 && isNewPuckCreation) {
+        renderChecklist();
+      }
+    }
+
+    function applySetupSettings() {
+      // Update New Puck Creation state
+      puckModeSubtext.textContent = isNewPuckCreation
+        ? 'On: melting fresh Paraffin + PTFE + Stearic Acid'
+        : 'Off: melting an existing wax puck';
+
+      // Update Brand-New Factory Chain state (15m vs 10m Hot Soak)
+      const targetSoakSecs = isNewFactoryChain ? 15 * 60 : 10 * 60;
+      stageDurations[1] = targetSoakSecs;
+
+      chainModeSubtext.textContent = isNewFactoryChain
+        ? 'On: includes factory grease stripping & 15-min soak'
+        : 'Off: assumes previously waxed chain rinsed in hot water';
+
+      if (currentStageIdx === 1 && !isRunning) {
+        remainingSecs = targetSoakSecs;
+      }
+
+      checkedByStage[0] = {};
+      renderAll();
+    }
+
+    // =========================================================================
+    // TIMER ENGINE
+    // =========================================================================
+    function formatMMSS(totalSeconds) {
+      const safe = Math.max(0, Math.floor(totalSeconds));
+      const mins = Math.floor(safe / 60);
+      const secs = safe % 60;
+      return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+    }
+
+    function stopInterval() {
+      if (intervalId !== null) {
+        clearInterval(intervalId);
+        intervalId = null;
+      }
+    }
+
+    function startTimer() {
+      const total = stageDurations[currentStageIdx];
+      if (total <= 0) return;
+
+      if (remainingSecs <= 0) {
+        remainingSecs = total;
+      }
+      isComplete = false;
+      isRunning = true;
+      completeBanner.classList.add('hidden');
+      stopInterval();
+
+      intervalId = setInterval(() => {
+        if (remainingSecs > 1) {
+          remainingSecs -= 1;
+          renderTimerOnly();
+        } else {
+          remainingSecs = 0;
+          isRunning = false;
+          isComplete = true;
+          stopInterval();
+          playPingChime();
+
+          completedStages[currentStageIdx] = true;
+
+          const finishedStage = STAGES[currentStageIdx];
+          bannerTitle.textContent = finishedStage.doneTitle;
+          bannerDesc.textContent = finishedStage.doneDesc;
+          completeBanner.classList.remove('hidden');
+          sendSystemNotification(finishedStage.doneTitle, finishedStage.doneDesc);
+          renderAll();
+        }
+      }, 1000);
+
+      renderAll();
+    }
+
+    function pauseTimer() {
+      isRunning = false;
+      stopInterval();
+      renderAll();
+    }
+
+    function resetCurrentStage() {
+      stopInterval();
+      isRunning = false;
+      isComplete = false;
+      completeBanner.classList.add('hidden');
+      delete completedStages[currentStageIdx];
+      remainingSecs = stageDurations[currentStageIdx];
+      renderAll();
+    }
+
+    function adjustTime(deltaSeconds) {
+      const currentTotal = stageDurations[currentStageIdx];
+      if (currentTotal <= 0) return;
+
+      const nextDuration = Math.max(60, currentTotal + deltaSeconds);
+      stageDurations[currentStageIdx] = nextDuration;
+      remainingSecs = Math.max(0, remainingSecs + deltaSeconds);
+
+      if (remainingSecs > 0 && isComplete) {
+        isComplete = false;
+        delete completedStages[currentStageIdx];
+        completeBanner.classList.add('hidden');
+      }
+      renderAll();
+    }
+
+    function switchStage(newIndex, autoStart = false) {
+      if (newIndex < 0 || newIndex >= STAGES.length) return;
+
+      stopInterval();
+      isRunning = false;
+      isComplete = false;
+      completeBanner.classList.add('hidden');
+
+      currentStageIdx = newIndex;
+      remainingSecs = stageDurations[newIndex];
+
+      renderAll();
+      if (autoStart && remainingSecs > 0) {
+        startTimer();
+      }
+    }
+
+    // =========================================================================
+    // RENDERING
+    // =========================================================================
+    function renderTimerOnly() {
+      const totalDuration = stageDurations[currentStageIdx];
+      countdownClock.textContent = formatMMSS(remainingSecs);
+      const pct = totalDuration > 0 ? Math.max(0, Math.min(100, (remainingSecs / totalDuration) * 100)) : 0;
+      timerProgressBar.style.width = `${pct}%`;
+    }
+
+    function renderStepOneSetup() {
+      if (currentStageIdx === 0) {
+        stepOneOptionsSection.classList.remove('hidden');
+        if (isNewPuckCreation) {
+          puckCalculatorSection.classList.remove('hidden');
+        } else {
+          puckCalculatorSection.classList.add('hidden');
+        }
+      } else {
+        stepOneOptionsSection.classList.add('hidden');
+      }
+    }
+
+    function renderVisualTimeline() {
+      const totalSecs = stageDurations.reduce((acc, s) => acc + s, 0);
+      const totalMins = Math.round(totalSecs / 60);
+
+      timelineModeLabel.textContent = isNewPuckCreation
+        ? 'New Puck + Chain Waxing Timeline'
+        : 'Chain Waxing Timeline';
+      timelineTotalDuration.textContent = `Total: ~${totalMins}m`;
+
+      visualTimelineContainer.innerHTML = '';
+
+      STAGES.forEach((stage, pos) => {
+        const secs = stageDurations[pos];
+        const isCurrent = pos === currentStageIdx;
+        const isDone = Boolean(completedStages[pos]) || pos < currentStageIdx;
+
+        const defaultDurationText = secs > 0 ? `${Math.round(secs / 60)}m` : 'Check';
+        const statusLabelText = isDone ? '✓ Done' : defaultDurationText;
+
+        const itemBtn = document.createElement('button');
+        itemBtn.type = 'button';
+        itemBtn.className = 'relative flex-1 flex flex-col items-center text-center group cursor-pointer focus:outline-none';
+        itemBtn.title = `Jump to ${stage.short} (${defaultDurationText})`;
+
+        // Horizontal connector bar behind the circle
+        if (pos < STAGES.length - 1) {
+          const line = document.createElement('div');
+          line.className = `absolute top-3 left-1/2 w-full h-[2px] -z-0 ${
+            isDone ? 'bg-emerald-400/60' : 'bg-slate-800'
+          }`;
+          itemBtn.appendChild(line);
+        }
+
+        // Step Node Circle
+        const circle = document.createElement('div');
+        if (isDone) {
+          circle.className = `relative z-10 w-6 h-6 rounded-full bg-emerald-400/20 border border-emerald-400 text-emerald-300 text-[11px] font-bold flex items-center justify-center transition ${
+            isCurrent ? 'ring-4 ring-emerald-400/20' : ''
+          }`;
+          circle.textContent = '✓';
+        } else if (isCurrent) {
+          circle.className = 'relative z-10 w-6 h-6 rounded-full bg-gradient-to-br from-sky-400 to-blue-500 text-slate-950 font-mono text-[11px] font-bold flex items-center justify-center ring-4 ring-sky-400/25 transition';
+          circle.textContent = pos + 1;
+        } else {
+          circle.className = 'relative z-10 w-6 h-6 rounded-full bg-[#090d16] border border-slate-700 group-hover:border-slate-500 text-slate-400 font-mono text-[11px] font-semibold flex items-center justify-center transition';
+          circle.textContent = pos + 1;
+        }
+
+        // Step Name
+        const labelEl = document.createElement('span');
+        labelEl.className = `mt-1.5 text-[10px] sm:text-[11px] leading-tight font-medium truncate max-w-[64px] sm:max-w-[76px] ${
+          isDone
+            ? 'text-emerald-300 font-semibold'
+            : isCurrent
+            ? 'text-sky-300 font-bold'
+            : 'text-slate-400 group-hover:text-slate-200'
+        }`;
+        labelEl.textContent = stage.short;
+
+        // Step Duration / Completed Tick Pill
+        const timeEl = document.createElement('span');
+        timeEl.className = `mt-0.5 font-mono text-[10px] px-1.5 py-0.5 rounded ${
+          isDone
+            ? 'bg-emerald-400/15 text-emerald-300 font-bold'
+            : isCurrent
+            ? 'bg-sky-400/15 text-sky-300 font-bold'
+            : 'text-slate-500'
+        }`;
+        timeEl.textContent = statusLabelText;
+
+        itemBtn.appendChild(circle);
+        itemBtn.appendChild(labelEl);
+        itemBtn.appendChild(timeEl);
+
+        itemBtn.addEventListener('click', () => switchStage(pos, false));
+
+        visualTimelineContainer.appendChild(itemBtn);
+      });
+    }
+
+    function getChecklistForStage(idx) {
+      const ptfeG = Math.round(waxGrams * 0.05 * 10) / 10;
+      const stearicG = Math.round(waxGrams * (stearicPct / 100) * 10) / 10;
+      const soakMins = isNewFactoryChain ? 15 : 10;
+
+      if (idx === 0) {
+        const chainPrepStep = isNewFactoryChain
+          ? 'Strip factory grease with white spirit/degreaser, rinse with alcohol/hot water, and dry.'
+          : 'Flush chain with boiling water (or wipe grit off) and let dry.';
+
+        const waxMeltStep = isNewPuckCreation
+          ? `Add <strong class="text-white">${waxGrams}g</strong> Paraffin, <strong class="text-sky-400">${ptfeG}g</strong> PTFE, and <strong class="text-emerald-400">${stearicG}g</strong> Stearic Acid to the dry pot, put lid on, and set dial to LOW.`
+          : 'Place wax puck in Cookworks pot, put lid on, and set dial to LOW until fully liquid.';
+
+        const finishStep = isNewPuckCreation
+          ? 'Once 100% liquid, stir thoroughly for 1–2 mins so PTFE and stearic acid are evenly suspended.'
+          : 'Keep dial on LOW (~75°C–85°C) so the wax stays fluid without overheating.';
+
+        return [chainPrepStep, waxMeltStep, finishStep];
+      }
+
+      if (idx === 1) {
+        return [
+          'Thread dry chain onto your stainless steel wire hanger (U-loop).',
+          'Stir the pot first, then submerge the chain completely.',
+          `Agitate for 60s and soak on LOW (~${soakMins} mins) until tiny air bubbles stop rising.`
+        ];
+      }
+
+      if (idx === 2) {
+        return [
+          'Turn dial to WARM or OFF so wax thickens slightly (~65°C–75°C).',
+          'Stop cooling just before a cloudy skin forms on the surface.',
+          'Give one final stir to suspend PTFE right before lifting the chain out.'
+        ];
+      }
+
+      if (idx === 3) {
+        return [
+          'Lift chain smoothly out and hang over cardboard/newspaper to catch drips.',
+          'Switch Cookworks pot OFF and cover with glass lid to cool cleanly.',
+          'Leave hanging for ~15 mins until wax turns completely opaque and solid.'
+        ];
+      }
+
+      return [
+        'Gently articulate stiff links back and forth by hand or over a dowel.',
+        'Thread chain onto drivetrain (directional logos facing outward).',
+        'Snap quick-link firmly into place and shift through all gears.',
+        'Wipe off excess surface wax flakes after your first 5-minute spin.'
+      ];
+    }
+
+    function renderChecklist() {
+      if (!checkedByStage[currentStageIdx]) {
+        checkedByStage[currentStageIdx] = {};
+      }
+      const stageChecks = checkedByStage[currentStageIdx];
+      const items = getChecklistForStage(currentStageIdx);
+
+      stageChecklist.innerHTML = '';
+      let doneCount = 0;
+
+      items.forEach((htmlText, i) => {
+        const isChecked = Boolean(stageChecks[i]);
+        if (isChecked) doneCount += 1;
+
+        const li = document.createElement('li');
+        const label = document.createElement('label');
+        label.className = 'flex items-start gap-3 cursor-pointer select-none group';
+
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.checked = isChecked;
+        checkbox.className = 'mt-0.5 w-4 h-4 rounded accent-sky-400 cursor-pointer flex-shrink-0';
+        checkbox.addEventListener('change', () => {
+          checkedByStage[currentStageIdx][i] = checkbox.checked;
+          renderChecklist();
+        });
+
+        const span = document.createElement('span');
+        span.innerHTML = htmlText;
+        span.className = isChecked
+          ? 'line-through text-slate-600 text-xs sm:text-sm leading-relaxed transition'
+          : 'text-slate-300 group-hover:text-white text-xs sm:text-sm leading-relaxed transition';
+
+        label.appendChild(checkbox);
+        label.appendChild(span);
+        li.appendChild(label);
+        stageChecklist.appendChild(li);
+      });
+
+      checklistProgress.textContent = `${doneCount}/${items.length}`;
+    }
+
+    function renderAll() {
+      renderStepOneSetup();
+      renderVisualTimeline();
+
+      const stage = STAGES[currentStageIdx];
+      const totalDuration = stageDurations[currentStageIdx];
+      const isTimed = totalDuration > 0;
+
+      dialSettingBadge.textContent = stage.dial;
+      tempTargetBadge.textContent = stage.temp;
+      stageCounterText.textContent = `Step ${currentStageIdx + 1} of ${STAGES.length}`;
+      stageHeadingText.textContent =
+        currentStageIdx === 0 && isNewPuckCreation
+          ? 'Prep Chain & Melt New Puck'
+          : stage.title;
+
+      if (isTimed) {
+        timedControlsRow.classList.remove('hidden');
+        untimedBanner.classList.add('hidden');
+        countdownClock.textContent = formatMMSS(remainingSecs);
+
+        const pct = totalDuration > 0 ? Math.max(0, Math.min(100, (remainingSecs / totalDuration) * 100)) : 0;
+        timerProgressBar.style.width = `${pct}%`;
+
+        if (isComplete) {
+          timerProgressBar.className = 'h-full bg-emerald-400 transition-all duration-300';
+          primaryActionBtn.textContent = currentStageIdx < STAGES.length - 1 ? 'Next Stage →' : 'Restart';
+          primaryActionBtn.className = 'w-full py-3 px-4 rounded-xl bg-emerald-400 hover:bg-emerald-300 text-slate-950 font-bold text-sm shadow-lg shadow-emerald-500/20 transition cursor-pointer';
+        } else if (isRunning) {
+          timerProgressBar.className = 'h-full bg-gradient-to-r from-sky-400 to-indigo-400 transition-all duration-300';
+          primaryActionBtn.textContent = 'Pause Timer';
+          primaryActionBtn.className = 'w-full py-3 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-sm border border-slate-700 transition cursor-pointer';
+        } else {
+          timerProgressBar.className = 'h-full bg-gradient-to-r from-sky-400 to-indigo-400 transition-all duration-300';
+          primaryActionBtn.textContent = remainingSecs < totalDuration ? 'Resume Timer' : 'Start Timer';
+          primaryActionBtn.className = 'w-full py-3 px-4 rounded-xl bg-gradient-to-r from-sky-400 to-blue-500 hover:from-sky-300 hover:to-blue-400 text-slate-950 font-bold text-sm shadow-lg shadow-sky-500/20 transition cursor-pointer';
+        }
+      } else {
+        timedControlsRow.classList.add('hidden');
+        untimedBanner.classList.remove('hidden');
+        timerProgressBar.style.width = '100%';
+        timerProgressBar.className = 'h-full bg-emerald-400';
+
+        primaryActionBtn.textContent = currentStageIdx < STAGES.length - 1 ? 'Next Stage →' : 'Finish & Reset';
+        primaryActionBtn.className = 'w-full py-3 px-4 rounded-xl bg-emerald-400 hover:bg-emerald-300 text-slate-950 font-bold text-sm shadow-lg shadow-emerald-500/20 transition cursor-pointer';
+      }
+
+      prevStageBtn.disabled = currentStageIdx === 0;
+      nextStageBtn.disabled = currentStageIdx === STAGES.length - 1;
+
+      renderChecklist();
+    }
+
+    // =========================================================================
+    // EVENT LISTENERS
+    // =========================================================================
+    newPuckCheckbox.addEventListener('change', (e) => {
+      isNewPuckCreation = e.target.checked;
+      applySetupSettings();
+    });
+
+    newChainCheckbox.addEventListener('change', (e) => {
+      isNewFactoryChain = e.target.checked;
+      applySetupSettings();
+    });
+
+    waxWeightInput.addEventListener('input', updateCalculatorReadouts);
+
+    document.querySelectorAll('.preset-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        waxWeightInput.value = btn.getAttribute('data-preset');
+        updateCalculatorReadouts();
+      });
+    });
+
+    stearicSlider.addEventListener('input', (e) => {
+      stearicPct = parseFloat(e.target.value);
+      updateCalculatorReadouts();
+    });
+
+    testPingBtn.addEventListener('click', playPingChime);
+
+    enableNotifBtn.addEventListener('click', async () => {
+      if (!('Notification' in window)) return;
+      if (Notification.permission === 'granted') {
+        notifIcon.classList.add('text-emerald-400');
+        return;
+      }
+      try {
+        const perm = await Notification.requestPermission();
+        if (perm === 'granted') {
+          notifIcon.classList.add('text-emerald-400');
+          sendSystemNotification('Chain Wax Timer Ready', 'Stage completion alerts enabled.');
+        }
+      } catch (err) {
+        console.warn('Permission request failed:', err);
+      }
+    });
+
+    primaryActionBtn.addEventListener('click', () => {
+      const total = stageDurations[currentStageIdx];
+
+      if (total === 0) {
+        completedStages[currentStageIdx] = true;
+        if (currentStageIdx < STAGES.length - 1) {
+          switchStage(currentStageIdx + 1, false);
+        } else {
+          completedStages = {};
+          switchStage(0, false);
+        }
+        return;
+      }
+
+      if (isComplete) {
+        if (currentStageIdx < STAGES.length - 1) {
+          switchStage(currentStageIdx + 1, false);
+        } else {
+          completedStages = {};
+          resetCurrentStage();
+        }
+        return;
+      }
+
+      if (isRunning) {
+        pauseTimer();
+      } else {
+        startTimer();
+      }
+    });
+
+    prevStageBtn.addEventListener('click', () => {
+      if (currentStageIdx > 0) switchStage(currentStageIdx - 1, false);
+    });
+
+    nextStageBtn.addEventListener('click', () => {
+      if (currentStageIdx < STAGES.length - 1) switchStage(currentStageIdx + 1, false);
+    });
+
+    subMinBtn.addEventListener('click', () => adjustTime(-60));
+    addMinBtn.addEventListener('click', () => adjustTime(60));
+    resetCurrentBtn.addEventListener('click', resetCurrentStage);
+
+    // =========================================================================
+    // WORKSHOP PIN ACCESS GATE (Code: 007007!!!)
+    // =========================================================================
+    const APP_PIN = "007007!!!";
+
+    function playPinSound(type) {
+      try {
+        if (!audioCtx) {
+          const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+          audioCtx = new AudioContextClass();
+        }
+        if (audioCtx.state === 'suspended') {
+          audioCtx.resume();
+        }
+        const now = audioCtx.currentTime;
+        if (type === 'tap') {
+          const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+          o.type = 'sine';
+          o.frequency.setValueAtTime(640, now);
+          g.gain.setValueAtTime(0.12, now);
+          g.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
+          o.connect(g); g.connect(audioCtx.destination);
+          o.start(now); o.stop(now + 0.06);
+        } else if (type === 'unlock') {
+          [440, 554.37, 659.25, 880].forEach((freq, idx) => {
+            const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+            o.type = 'square';
+            o.frequency.setValueAtTime(freq, now + idx * 0.07);
+            g.gain.setValueAtTime(0.1, now + idx * 0.07);
+            g.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.07 + 0.2);
+            o.connect(g); g.connect(audioCtx.destination);
+            o.start(now + idx * 0.07); o.stop(now + idx * 0.07 + 0.2);
+          });
+        } else if (type === 'wrong') {
+          const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+          o.type = 'sawtooth';
+          o.frequency.setValueAtTime(160, now);
+          o.frequency.linearRampToValueAtTime(115, now + 0.22);
+          g.gain.setValueAtTime(0.15, now);
+          g.gain.exponentialRampToValueAtTime(0.001, now + 0.24);
+          o.connect(g); g.connect(audioCtx.destination);
+          o.start(now); o.stop(now + 0.24);
+        }
+      } catch (err) {
+        console.warn('Audio playback unavailable:', err);
+      }
+    }
+
+    function checkPin() {
+      const inp = document.getElementById('pin-input');
+      const err = document.getElementById('pin-error');
+      if (inp.value === APP_PIN) {
+        sessionStorage.setItem('chain_wax_pin_unlocked', 'true');
+        document.getElementById('modal-pin').classList.add('hidden');
+        playPinSound('unlock');
+      } else {
+        err.classList.remove('hidden');
+        playPinSound('wrong');
+        inp.value = '';
+        setTimeout(() => err.classList.add('hidden'), 2500);
+      }
+    }
+
+    function pinDigit(d) {
+      playPinSound('tap');
+      const inp = document.getElementById('pin-input');
+      if (inp.value.length < 9) {
+        inp.value += d;
+        if (inp.value.length === 9) {
+          setTimeout(checkPin, 120);
+        }
+      }
+    }
+
+    function pinClear() {
+      playPinSound('tap');
+      document.getElementById('pin-input').value = '';
+      document.getElementById('pin-error').classList.add('hidden');
+    }
+
+    function reLockApp() {
+      sessionStorage.removeItem('chain_wax_pin_unlocked');
+      document.getElementById('modal-pin').classList.remove('hidden');
+      document.getElementById('pin-input').value = '';
+      playPinSound('tap');
+    }
+
+    function initPinGate() {
+      if (sessionStorage.getItem('chain_wax_pin_unlocked') === 'true') {
+        document.getElementById('modal-pin').classList.add('hidden');
+      } else {
+        document.getElementById('modal-pin').classList.remove('hidden');
+        const inp = document.getElementById('pin-input');
+        if (inp) {
+          inp.addEventListener('keyup', (e) => {
+            if (e.key === 'Enter') checkPin();
+            else if (inp.value.length === 9) checkPin();
+          });
+          setTimeout(() => {
+            try { inp.focus(); } catch (e) {}
+          }, 150);
+        }
+      }
+    }
+
+    // =========================================================================
+    // INIT
+    // =========================================================================
+    function init() {
+      stageDurations = STAGES.map((s) => s.seconds);
+      remainingSecs = stageDurations[0];
+
+      if ('Notification' in window && Notification.permission === 'granted') {
+        notifIcon.classList.add('text-emerald-400');
+      }
+
+      updateCalculatorReadouts();
+      renderAll();
+      initPinGate();
+    }
+
+    init();
+  </script>
+</body>
+</html>
